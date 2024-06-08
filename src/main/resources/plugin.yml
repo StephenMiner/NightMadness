@@ -1,0 +1,8 @@
+name: NightMadness
+version: '${project.version}'
+main: me.stephenminer.nightmadness.NightMadnes
+api-version: '1.20'
+
+commands:
+  nightmadness-reload:
+    permission: night-madness.commands.reload

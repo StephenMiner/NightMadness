@@ -1,0 +1,16 @@
+
+##Worlds where the plugin won't take effect
+disable-in:
+  - null
+min-light-level-inside: 10
+min-light-level-outside: 19
+##potioneffect,duration(ticks),amplifier
+darkness-effects:
+  - blindness,10,2
+  - slowness,10,1
+torches:
+  ##Whether you want actual light blocks to show up or not, otherwise, emitters will only prevent darkness effects but create no light
+  dynamic-lighting: true
+  ##Material,light-level,work-in-offhand
+  held-light-emitters:
+    - TORCH,14,false
