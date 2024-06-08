@@ -6,6 +6,7 @@ import me.stephenminer.nightmadness.files.ConfigFile;
 import me.stephenminer.nightmadness.files.MobFile;
 import me.stephenminer.nightmadness.files.PatrolFile;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,8 +14,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public final class NightMadness extends JavaPlugin {
     public ConfigFile darkFile;
@@ -175,6 +175,23 @@ public final class NightMadness extends JavaPlugin {
         File child = new File(parent, id + ".yml");
         if (child.exists()) return new PatrolFile(this, id);
         return null;
+    }
+
+
+    /**
+     *
+     * @param base Provides strings
+     * @param match to check contents of base against
+     * @return new List containing elements of base that contain match
+     */
+    public List<String> filter(Collection<String> base, String match){
+        match = ChatColor.stripColor(match.toLowerCase());
+        List<String> filtered = new ArrayList<>();
+        for (String entry : base){
+            String temp = ChatColor.stripColor(entry.toLowerCase());
+            if (temp.contains(match)) filtered.add(temp);
+        }
+        return filtered;
     }
 
 

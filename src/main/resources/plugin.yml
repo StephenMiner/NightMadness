@@ -4,5 +4,7 @@ main: me.stephenminer.nightmadness.NightMadnes
 api-version: '1.20'
 
 commands:
+  spawnmob:
+    permission: night-madness.commands.spawn
   nightmadness-reload:
     permission: night-madness.commands.reload

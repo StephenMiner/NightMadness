@@ -23,11 +23,12 @@ public class MobEvents implements Listener {
         LivingEntity living = event.getEntity();
         if (living instanceof Player) return;
         if (!living.getPersistentDataContainer().has(plugin.gunnerKey)) return;
-        ItemStack crossbow = event.getBow();
-        ItemMeta meta = crossbow.getItemMeta();
+        ItemStack bow = event.getBow();
+        if (bow == null || !bow.hasItemMeta()) return;
+        ItemMeta meta = bow.getItemMeta();
         CustomItemReader reader = new CustomItemReader();
         if (reader.isGun(meta)){
-            reader.createGunFire(living,crossbow,meta).shoot();
+            reader.createGunFire(living,bow,meta).shoot();
         }
     }
 
