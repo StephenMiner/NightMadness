@@ -1,0 +1,7 @@
+type: ZOMBIE
+friendly-fire: false
+attributes:
+  - GENERIC_MAX_HEALTH,20
+equipment:
+  - HAND,DIAMOND_SWORD
+

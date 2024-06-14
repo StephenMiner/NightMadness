@@ -22,6 +22,7 @@ public class ReloadConfig implements CommandExecutor {
             }
         }
         plugin.darkFile.reloadConfig();
+        plugin.patrolManager.updateList();
         plugin.loadFiles();
         return false;
     }

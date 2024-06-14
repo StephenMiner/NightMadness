@@ -1,0 +1,40 @@
+##Just defines whether patrol can spawn or not, disabled since this is an example
+enabled: false
+##The min and max distance that the patrol can spawn from a player (x,z axis)
+spawn-range: 24,28
+##The delay-range in ticks that the plugin will wait to attempt to spawn a patrol
+spawn-interval-range: 12000,13200
+##The chance for the patrol to spawn when an attempt is made, a number 0-99 will be rolled and if the roll < spawn-chance, the patrol will spawn
+spawn-chance: 20
+max-light-level: 20
+##The maximum number of players a patrol can spawn for. For example if the value is 2 and there are 4 players
+##When the patrol spawns, 2 of the 4 players will be randomly selected and have a patrol spawn targetting them
+##Put 'ALL' if you dont want there to be a limit. Chance calculations will be applied per player.
+max-players-affected: 4
+##What worlds you DONT want the patrol to spawn in
+world-blacklist:
+  - world_the_nether
+  - world_the_end
+##Only applies to Raider type mobs (Witches, Illagers, Pillagers, etc.) other types will not have a patrol point
+raider-targeting:
+  ##If true, patrol will auto-target the instigating player when it spawns in
+  target-player-immediately: false
+  ##If true, patrol will generate a block to target and raider type mobs will patrol to that block
+  target-block: true
+  ##radius and center only needed if target-block is true
+  radius: 4
+  ##Can either be 'spawn' as in the patrol's center spawn location or 'player' as in the player's location that triggered the patrol
+  center: spawn
+spawn-sound:
+  sound: ITEM_GOAT_HORN_SOUND_0
+  pitch: 1f
+  volume: 1f
+
+##If pillagers are included in this raid then a random pillager will be made captain
+##Format as Mob,num-to-spawn,random (true/false) | you can use either EntityTypes or mob ids from this plugin (files in the mobs folder)
+##IF random is set to true, a random number of mobs from 0 to whatever number you put will be spawned. If false then whatever number you put will
+##always be spawned
+spawn:
+  - test,5, true
+  - PILLAGER,1, false
+

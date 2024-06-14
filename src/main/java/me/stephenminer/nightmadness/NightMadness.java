@@ -5,6 +5,7 @@ import me.stephenminer.nightmadness.darkness.LightEmitter;
 import me.stephenminer.nightmadness.files.ConfigFile;
 import me.stephenminer.nightmadness.files.MobFile;
 import me.stephenminer.nightmadness.files.PatrolFile;
+import me.stephenminer.nightmadness.patrol.PatrolManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,6 +18,7 @@ import java.io.File;
 import java.util.*;
 
 public final class NightMadness extends JavaPlugin {
+    public PatrolManager patrolManager;
     public ConfigFile darkFile;
 
     public HashMap<Material, LightEmitter> emitters;
@@ -44,6 +46,8 @@ public final class NightMadness extends JavaPlugin {
         gunnerKey = new NamespacedKey(this, "gunner");
         id = new NamespacedKey(this,"id");
         friendlyFire = new NamespacedKey(this, "friendlyfire");
+        patrolManager = new PatrolManager();
+        patrolManager.run();
 
     }
     private void initFiles(){
