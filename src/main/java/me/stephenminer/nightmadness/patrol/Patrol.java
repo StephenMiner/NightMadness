@@ -2,18 +2,19 @@ package me.stephenminer.nightmadness.patrol;
 
 import me.stephenminer.nightmadness.NightMadness;
 import me.stephenminer.nightmadness.mob.MobBuilder;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.HeightMap;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.entity.*;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 import java.util.Random;
 
 public class Patrol {
+    public static final NamespacedKey PATROL_KEY = new NamespacedKey(JavaPlugin.getPlugin(NightMadness.class),"patrol");
     private final NightMadness plugin;
     private final Location spawnpoint, patrolPoint;
     private final World world;
@@ -45,8 +46,8 @@ public class Patrol {
         else center = spawnpoint;
         Random random = new Random();
         int radius = reader.targetRadius();
-        int x = random.nextInt(center.getBlockX() - radius, center.getBlockX() + radius + 1);
-        int z = random.nextInt(center.getBlockZ() - radius, center.getBlockZ() + radius + 1);
+        int x = random.nextInt(center.getBlockX() + radius + 1 - (center.getBlockX() + radius)) + center.getBlockX() - radius;
+        int z = random.nextInt(center.getBlockZ() + radius + 1- (center.getBlockZ() - radius)) + center.getBlockZ() - radius;
         int y = center.getWorld().getHighestBlockYAt(x,z, HeightMap.MOTION_BLOCKING_NO_LEAVES);
 
         return new Location(center.getWorld(),x,y,z);
@@ -66,33 +67,48 @@ public class Patrol {
             for (int i = 0; i < toSpawn; i++){
                 LivingEntity living = (LivingEntity) world.spawnEntity(mobPosition(), type);
                 updateTargeting(living);
+                System.out.println(2000);
+                System.out.println(mobPosition());
+                living.damage(20);
             }
+            return;
         }catch (Exception ignored){}
         MobBuilder builder;
         for (int i = 0; i < toSpawn; i++){
             builder = new MobBuilder(mobData.mobId(), mobPosition());
             builder.spawnMob();
             updateTargeting(builder.getEntity());
+
         }
     }
 
     private void updateTargeting(LivingEntity living){
         if (!(living instanceof Mob)) return;
-        Mob mob = (Mob) living;
-        if (reader.targetImmediately()){
-            mob.setTarget(player);
-        } else if (mob instanceof Raider raider && reader.targetBlock()) {
-            if (!captain) raider.setPatrolLeader(true);
-            raider.setPatrolTarget(patrolPoint.getBlock());
-        }
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Mob mob = (Mob) living;
+                if (mob.isDead()){
+                    this.cancel();
+                    return;
+                }
+                if(reader.targetImmediately()) {
+                    mob.setTarget(player);
+                } else if(mob instanceof Raider raider &&reader.targetBlock()) {
+                    if (!captain) raider.setPatrolLeader(true);
+                    raider.setPatrolTarget(patrolPoint.getBlock());
+                }
+            }
+        }.runTaskTimer(plugin,1,10);
     }
 
 
 
     private Location mobPosition(){
         int radius = 5;
-        int x = random.nextInt(spawnpoint.getBlockX() - radius, spawnpoint.getBlockX() + radius + 1);
-        int z = random.nextInt(spawnpoint.getBlockZ() - radius, spawnpoint.getBlockZ() + radius + 1);
+        int x = random.nextInt(spawnpoint.getBlockX() + radius + 1 - (spawnpoint.getBlockX() - radius)) + (spawnpoint.getBlockX() - radius);
+        int z = random.nextInt(spawnpoint.getBlockZ() + radius + 1 - (spawnpoint.getBlockZ() - radius)) + (spawnpoint.getBlockZ() - radius);
         int y = spawnpoint.getWorld().getHighestBlockYAt(x,z, HeightMap.MOTION_BLOCKING_NO_LEAVES);
         return new Location(spawnpoint.getWorld(),x,y,z);
     }

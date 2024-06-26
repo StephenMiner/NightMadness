@@ -1,6 +1,6 @@
 name: NightMadness
 version: '${project.version}'
-main: me.stephenminer.nightmadness.NightMadnes
+main: me.stephenminer.nightmadness.NightMadness
 api-version: '1.20'
 
 commands:
@@ -8,3 +8,5 @@ commands:
     permission: night-madness.commands.spawn
   nightmadness-reload:
     permission: night-madness.commands.reload
+  spawnpatrol:
+    permission: night-madness.commands.spawn

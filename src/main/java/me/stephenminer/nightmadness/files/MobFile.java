@@ -14,11 +14,15 @@ public class MobFile {
     private File parent;
 
     public MobFile(NightMadness plugin, String file) {
+        System.out.println(0);
         this.plugin = plugin;
         this.file = file;
         try {
             parent = new File(this.plugin.getDataFolder(), "mobs");
-            if (!parent.exists()) parent.mkdir();
+            if (!parent.exists()) {
+                parent.mkdir();
+                System.out.println(1);
+            }
         }catch (Exception e){ e.printStackTrace(); }
         saveDefaultConfig();
     }

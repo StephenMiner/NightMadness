@@ -48,6 +48,11 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+                <includes>
+                    <include>mobs/*</include>
+                    <include>patrols/*</include>
+                    <include>*.yml</include>
+                </includes>
             </resource>
         </resources>
     </build>

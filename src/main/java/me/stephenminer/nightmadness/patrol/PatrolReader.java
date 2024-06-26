@@ -48,7 +48,7 @@ public class PatrolReader {
      */
     public int[] spawnInterval(){
         if (file.getConfig().contains("spawn-interval-range")){
-            String[] split = file.getConfig().getString("spawn-range").split(",");
+            String[] split = file.getConfig().getString("spawn-interval-range").split(",");
             int[] range = new int[2];
             range[0] = Integer.parseInt(split[0]);
             range[1] = Integer.parseInt(split[1]);

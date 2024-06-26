@@ -1,21 +1,28 @@
 package me.stephenminer.nightmadness;
 
-import me.stephenminer.customitems.ItemConfig;
+import me.stephenminer.nightmadness.commands.ReloadConfig;
+import me.stephenminer.nightmadness.commands.SpawnMob;
+import me.stephenminer.nightmadness.commands.SpawnPatrol;
 import me.stephenminer.nightmadness.darkness.LightEmitter;
 import me.stephenminer.nightmadness.files.ConfigFile;
 import me.stephenminer.nightmadness.files.MobFile;
 import me.stephenminer.nightmadness.files.PatrolFile;
+import me.stephenminer.nightmadness.listeners.MobEvents;
 import me.stephenminer.nightmadness.patrol.PatrolManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 
 public final class NightMadness extends JavaPlugin {
     public PatrolManager patrolManager;
@@ -38,17 +45,41 @@ public final class NightMadness extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        initFiles();
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this,()->{
+            checkDirectory();
+            initFiles();
+
+
         buildEmitters();
         customItems = Bukkit.getServer().getPluginManager().isPluginEnabled("CustomItems");
         this.getLogger().info("CustomItems Present: " + customItems);
-
         gunnerKey = new NamespacedKey(this, "gunner");
         id = new NamespacedKey(this,"id");
         friendlyFire = new NamespacedKey(this, "friendlyfire");
+        mobFiles = new HashMap<>();
+        patrolFiles = new HashMap<>();
+        darknessEffects = new ArrayList<>();
         patrolManager = new PatrolManager();
         patrolManager.run();
+        registerEvents();
+        addCommands();
+        },2);
+    }
 
+    private void registerEvents(){
+        PluginManager pm = this.getServer().getPluginManager();
+        pm.registerEvents(new MobEvents(),this);
+    }
+    private void addCommands(){
+        SpawnPatrol spawnPatrol = new SpawnPatrol();
+        getCommand("spawnpatrol").setExecutor(spawnPatrol);
+        getCommand("spawnpatrol").setTabCompleter(spawnPatrol);
+
+        SpawnMob spawnMob = new SpawnMob();
+        getCommand("spawnmob").setExecutor(spawnMob);
+        getCommand("spawnmob").setTabCompleter(spawnMob);
+
+        getCommand("nightmadness-reload").setExecutor(new ReloadConfig());
     }
     private void initFiles(){
         darkFile = new ConfigFile(this, "darkness");
@@ -99,6 +130,16 @@ public final class NightMadness extends JavaPlugin {
     }
 
     /**
+     * Searches plugin directory for mob and patrol folders. If they aren't present, the folders will be created
+     */
+    private void checkDirectory(){
+        String dataFolderPath = this.getDataFolder().getPath();
+        File mobFolder = new File(dataFolderPath, "mobs");
+        if (mobFolder.exists()) mobFolder.mkdir();
+        File patrolFolder = new File(dataFolderPath,"patrols");
+        if (patrolFolder.exists()) patrolFolder.mkdir();
+    }
+    /**
      *
      * @param str format as Type,duration,amplifier
      * @return PotionEffect from data parsed from str
@@ -120,6 +161,7 @@ public final class NightMadness extends JavaPlugin {
      * Resets and populates cached HashMap emitters;
      */
     private void buildEmitters(){
+        emitters = new HashMap<>();
         List<String> sEmitters = this.darkFile.getConfig().getStringList("torches.held-light-emitters");
         for (String sEmitter : sEmitters){
             LightEmitter emitter = emitterFromString(sEmitter);

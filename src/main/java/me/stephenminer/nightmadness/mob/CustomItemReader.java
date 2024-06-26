@@ -8,16 +8,12 @@ import me.stephenminer.customitems.gunutils.GunReader;
 import me.stephenminer.customitems.gunutils.SpreadGunFire;
 import me.stephenminer.nightmadness.NightMadness;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Mob;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * Use to parse strings that arent Materials if CustomItems is installed
